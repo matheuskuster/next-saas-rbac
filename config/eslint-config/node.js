@@ -5,9 +5,4 @@ import { config as baseConfig } from "./base.js";
  *
  * @type {import("eslint").Linter.Config[]}
  * */
-export const nodeJsConfig = [
-  ...baseConfig,
-  js.configs.recommended,
-  eslintConfigPrettier,
-  ...tseslint.configs.recommended,
-]
+export const nodeJsConfig = [...baseConfig];

@@ -28,11 +28,35 @@ export const config = [
       "simple-import-sort": simpleImportSortPlugin,
     },
     rules: {
-      "simple-import-sort/imports": "error",
+      "simple-import-sort/imports": [
+        "error",
+        {
+          groups: [
+            // Node.js built-in modules
+            ["^node:"],
+            // External packages (anything not starting with . or @/)
+            ["^@?\\w"],
+            // Internal packages (starting with @/)
+            ["^@/"],
+            // Parent imports (../)
+            ["^\\.\\.(?!/?$)", "^\\.\\./?$"],
+            // Other relative imports (same folder ./)
+            ["^\\./(?=.*/)(?!/?$)", "^\\.(?!/?$)", "^\\./?$"],
+            // Style imports
+            ["^.+\\.s?css$"],
+          ],
+        },
+      ],
       "simple-import-sort/exports": "error",
-    }
+    },
   },
   {
-    ignores: ["dist/**"],
+    ignores: [
+      "dist/**",
+      "**/generated/**",
+      "**/.next/**",
+      "**/node_modules/**",
+      "**/build/**",
+    ],
   },
 ];
