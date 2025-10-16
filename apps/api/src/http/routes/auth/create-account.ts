@@ -3,6 +3,7 @@ import { FastifyInstance } from "fastify";
 import { ZodTypeProvider } from "fastify-type-provider-zod";
 import z from "zod";
 
+import { BadRequestError } from "@/http/_errors";
 import { prisma } from "@/lib/prisma";
 
 export async function createAccount(app: FastifyInstance) {
@@ -10,11 +11,20 @@ export async function createAccount(app: FastifyInstance) {
     "/users",
     {
       schema: {
+        tags: ["auth"],
+        summary: "Create a new account",
         body: z.object({
           name: z.string(),
           email: z.email(),
           password: z.string().min(6),
         }),
+        response: {
+          201: z.object({
+            id: z.string(),
+            name: z.string().nullable(),
+            email: z.string(),
+          }),
+        },
       },
     },
     async (request, reply) => {
@@ -25,18 +35,40 @@ export async function createAccount(app: FastifyInstance) {
       });
 
       if (userWithSameEmail) {
-        return reply.status(400).send({
-          error: "User with this email already exists",
-        });
+        throw new BadRequestError("User with same email already exists");
       }
+
+      const [, domain] = email.split("@");
+
+      const autoJoinOrganization = await prisma.organization.findFirst({
+        where: {
+          domain,
+          shouldAttachUsersByDomain: true,
+        },
+      });
 
       const passwordHash = await hash(password, 6);
 
       const user = await prisma.user.create({
-        data: { name, email, passwordHash },
+        data: {
+          name,
+          email,
+          passwordHash,
+          memberships: autoJoinOrganization
+            ? {
+                create: {
+                  organizationId: autoJoinOrganization.id,
+                },
+              }
+            : undefined,
+        },
       });
 
-      return reply.status(201).send(user);
+      return reply.status(201).send({
+        id: user.id,
+        name: user.name,
+        email: user.email,
+      });
     }
   );
 }

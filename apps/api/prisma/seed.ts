@@ -39,7 +39,7 @@ const SEED_ORGANIZATIONS: OrganizationConfig[] = [
   {
     name: "Acme Inc (Admin)",
     slug: "acme-admin",
-    domain: "acme-admin.com",
+    domain: "acme.com",
     memberRoles: ["ADMIN", "MEMBER", "MEMBER"],
   },
   {
