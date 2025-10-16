@@ -4,6 +4,7 @@ import { ZodTypeProvider } from "fastify-type-provider-zod";
 import z from "zod";
 
 import { UnauthorizedError } from "@/http/_errors";
+import { OPENAPI_TAGS } from "@/lib/openapi-tags";
 import { prisma } from "@/lib/prisma";
 
 export async function authenticateWithPassword(app: FastifyInstance) {
@@ -11,7 +12,7 @@ export async function authenticateWithPassword(app: FastifyInstance) {
     "/sessions/password",
     {
       schema: {
-        tags: ["auth"],
+        tags: [OPENAPI_TAGS.AUTH],
         summary: "Authenticate with e-mail and password",
         body: z.object({
           email: z.email(),

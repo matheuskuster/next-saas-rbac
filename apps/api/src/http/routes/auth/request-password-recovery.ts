@@ -3,6 +3,7 @@ import { ZodTypeProvider } from "fastify-type-provider-zod";
 import z from "zod";
 
 import { TokenType } from "@/generated/prisma";
+import { OPENAPI_TAGS } from "@/lib/openapi-tags";
 import { prisma } from "@/lib/prisma";
 
 const PASSWORD_RECOVERY_TOKEN_EXPIRATION_TIME_MS = 1000 * 60 * 60 * 3; // 3 hours
@@ -14,7 +15,7 @@ export async function requestPasswordRecovery(app: FastifyInstance) {
     "/password/recover",
     {
       schema: {
-        tags: ["auth"],
+        tags: [OPENAPI_TAGS.AUTH],
         summary: "Request password recover",
         body: z.object({
           email: z.email(),

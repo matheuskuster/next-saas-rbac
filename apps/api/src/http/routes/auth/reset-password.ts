@@ -5,6 +5,7 @@ import z from "zod";
 
 import { TokenType } from "@/generated/prisma";
 import { BadRequestError, UnauthorizedError } from "@/http/_errors";
+import { OPENAPI_TAGS } from "@/lib/openapi-tags";
 import { prisma } from "@/lib/prisma";
 
 export async function resetPassword(app: FastifyInstance) {
@@ -12,7 +13,7 @@ export async function resetPassword(app: FastifyInstance) {
     "/password/reset",
     {
       schema: {
-        tags: ["auth"],
+        tags: [OPENAPI_TAGS.AUTH],
         summary: "Reset password",
         body: z.object({
           token: z.uuid(),

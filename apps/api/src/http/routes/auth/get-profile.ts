@@ -4,6 +4,7 @@ import z from "zod";
 
 import { BadRequestError } from "@/http/_errors";
 import { authMiddleware } from "@/http/middlewares/auth";
+import { OPENAPI_TAGS } from "@/lib/openapi-tags";
 import { prisma } from "@/lib/prisma";
 
 export async function getProfile(app: FastifyInstance) {
@@ -14,14 +15,15 @@ export async function getProfile(app: FastifyInstance) {
       "/sessions/me",
       {
         schema: {
-          tags: ["auth"],
+          tags: [OPENAPI_TAGS.AUTH],
           summary: "Get authenticated user profile",
+          security: [{ Bearer: [] }] as const,
           response: {
             200: z.object({
               id: z.string(),
               name: z.string().nullable(),
-              email: z.string(),
-              avatarUrl: z.string().nullable(),
+              email: z.email(),
+              avatarUrl: z.url().nullable(),
             }),
           },
         },

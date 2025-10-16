@@ -5,6 +5,7 @@ import z from "zod";
 import { githubClient } from "@/clients/github-client";
 import { AccountProvider } from "@/generated/prisma";
 import { BadRequestError } from "@/http/_errors";
+import { OPENAPI_TAGS } from "@/lib/openapi-tags";
 import { prisma } from "@/lib/prisma";
 
 export async function authenticateWithGithub(app: FastifyInstance) {
@@ -12,7 +13,7 @@ export async function authenticateWithGithub(app: FastifyInstance) {
     "/sessions/github",
     {
       schema: {
-        tags: ["auth"],
+        tags: [OPENAPI_TAGS.AUTH],
         summary: "Authenticate with GitHub",
         body: z.object({
           code: z.string(),

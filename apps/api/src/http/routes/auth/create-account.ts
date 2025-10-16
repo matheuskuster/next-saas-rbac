@@ -4,6 +4,7 @@ import { ZodTypeProvider } from "fastify-type-provider-zod";
 import z from "zod";
 
 import { BadRequestError } from "@/http/_errors";
+import { OPENAPI_TAGS } from "@/lib/openapi-tags";
 import { prisma } from "@/lib/prisma";
 
 export async function createAccount(app: FastifyInstance) {
@@ -11,7 +12,7 @@ export async function createAccount(app: FastifyInstance) {
     "/users",
     {
       schema: {
-        tags: ["auth"],
+        tags: [OPENAPI_TAGS.AUTH],
         summary: "Create a new account",
         body: z.object({
           name: z.string(),

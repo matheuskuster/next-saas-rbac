@@ -25,7 +25,18 @@ app.register(fastifySwagger, {
     info: {
       title: "Next.js SaaS",
       version: "1.0.0",
-      description: "Full-stack SaaS app with multi-tenant and RBAC.",
+      description:
+        "Full-stack SaaS app with multi-tenant and RBAC. Built with Fastify, Prisma, PostgreSQL, and TypeScript.",
+    },
+    components: {
+      securitySchemes: {
+        Bearer: {
+          type: "http",
+          scheme: "bearer",
+          bearerFormat: "JWT",
+          description: "Enter your JWT token in the format: Bearer <token>",
+        },
+      },
     },
   },
   transform: jsonSchemaTransform,
@@ -34,7 +45,6 @@ app.register(fastifySwagger, {
 app.register(ScalarApiReference, {
   routePrefix: "/docs",
   configuration: {
-    theme: "bluePlanet",
     title: "Next.js SaaS",
     showToolbar: "never",
     hideClientButton: true,
